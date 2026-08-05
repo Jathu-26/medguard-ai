@@ -1,0 +1,22 @@
+﻿.\.venv\Scripts\python.exe : C:\Users\jeyar\Desktop\YGC\backend\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with 
+`starlette.testclient` is deprecated; install `httpx2` instead.
+At line:1 char:13
++ cd backend; .\.venv\Scripts\python.exe -c "
++             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\Users\jeyar\...ttpx2` instead.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  from starlette.testclient import TestClient as TestClient  # noqa
+INFO:httpx:HTTP Request: POST http://testserver/api/demo/patient "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET http://testserver/api/patients/f2dcd766-4ce5-47d7-a591-e26b774b5596/overview "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET http://testserver/api/patients/f2dcd766-4ce5-47d7-a591-e26b774b5596/alerts "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET http://testserver/api/patients/f2dcd766-4ce5-47d7-a591-e26b774b5596/lab-trends "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST http://testserver/api/patients/f2dcd766-4ce5-47d7-a591-e26b774b5596/chat "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET http://testserver/api/patients/f2dcd766-4ce5-47d7-a591-e26b774b5596/timeline "HTTP/1.1 200 OK"
+overview: {'total_documents': 4, 'total_visits': 4, 'current_medications': 11, 'known_allergies': ['Penicillin'], 'abnormal_lab_results': 6, 'high_risk_warnings': 3, 'medium_risk_warnings': 2, 'low_risk_warnings': 0, 'average_confidence': 0.8, 'documents_needing_review': 0}
+categories: ['Allergy Conflict', 'Drug Interaction', 'Duplicate Medication', 'Prescription Timing Conflict']
+alert count: 5
+trends: [('Blood glucose', 'Increasing trend'), ('HbA1c', 'Increasing trend'), ('Creatinine', 'Increasing trend'), ('Total Cholesterol', 'Insufficient data'), ('Haemoglobin', 'Insufficient data'), ('WBC', 'Insufficient data')]
+chat answer: Yes, a medicine was found that appears to match a previously recorded allergy.
+chat disclaimer: True
+timeline entries: 4

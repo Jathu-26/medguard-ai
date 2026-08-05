@@ -1,0 +1,519 @@
+{
+  "patient": {
+    "id": "d160067b-5ab1-4b7e-9a08-0be782c256a2",
+    "name": "Official Competition Patient",
+    "date_of_birth": "1968-05-14"
+  },
+  "documents_count": 4,
+  "documents": [
+    {
+      "name": "visit1_prescription.txt",
+      "status": "completed",
+      "confidence": 92.0,
+      "method": "plaintext"
+    },
+    {
+      "name": "visit2_doctor_note.txt",
+      "status": "completed",
+      "confidence": 92.0,
+      "method": "plaintext"
+    },
+    {
+      "name": "visit3_lab_report.txt",
+      "status": "completed",
+      "confidence": 92.0,
+      "method": "plaintext"
+    },
+    {
+      "name": "visit4_discharge.txt",
+      "status": "completed",
+      "confidence": 92.0,
+      "method": "plaintext"
+    }
+  ],
+  "medications_count": 13,
+  "lab_results_count": 10,
+  "lab_trends_count": 6,
+  "alerts_count": 12,
+  "alerts": [
+    {
+      "title": "Duplicate medication detected",
+      "category": "Duplicate Medication",
+      "risk_level": "Medium",
+      "explanation": "The medication 'Metformin' appears more than once across the uploaded records. This may indicate the same medicine was prescribed by multiple providers. This should be reviewed by a doctor or pharmacist.",
+      "source_documents": [
+        "visit1_prescription.txt",
+        "visit2_doctor_note.txt",
+        "visit4_discharge.txt"
+      ],
+      "page_numbers": [
+        1
+      ],
+      "confidence": 78.0,
+      "recommended_action": "Professional review strongly recommended."
+    },
+    {
+      "title": "Potential drug interaction: Aspirin + Warfarin",
+      "category": "Drug Interaction",
+      "risk_level": "High",
+      "explanation": "Potential interaction detected between Aspirin and Warfarin. Both warfarin and aspirin affect blood clotting. Combined use may increase the risk of bleeding. This should be reviewed by a doctor or pharmacist.",
+      "source_documents": [
+        "visit1_prescription.txt",
+        "visit4_discharge.txt"
+      ],
+      "page_numbers": [
+        1
+      ],
+      "confidence": 70.0,
+      "recommended_action": "Professional review strongly recommended."
+    },
+    {
+      "title": "Potential drug interaction: Warfarin + Aspirin",
+      "category": "Drug Interaction",
+      "risk_level": "High",
+      "explanation": "Potential interaction detected between Warfarin and Aspirin. Both warfarin and aspirin affect blood clotting. Combined use may increase the risk of bleeding. This should be reviewed by a doctor or pharmacist.",
+      "source_documents": [
+        "visit4_discharge.txt"
+      ],
+      "page_numbers": [
+        1
+      ],
+      "confidence": 70.0,
+      "recommended_action": "Professional review strongly recommended."
+    },
+    {
+      "title": "Possible dosage conflict detected",
+      "category": "Dosage Conflict",
+      "risk_level": "High",
+      "explanation": "Different dosages were recorded for 'Metformin' across documents. Available records may be incomplete.",
+      "source_documents": [
+        "visit1_prescription.txt",
+        "visit2_doctor_note.txt",
+        "visit4_discharge.txt"
+      ],
+      "page_numbers": [
+        1
+      ],
+      "confidence": 66.0,
+      "recommended_action": "Professional review strongly recommended."
+    },
+    {
+      "title": "Possible frequency conflict detected",
+      "category": "Dosage Conflict",
+      "risk_level": "Medium",
+      "explanation": "Different frequency instructions were recorded for 'Metformin'.",
+      "source_documents": [
+        "visit1_prescription.txt",
+        "visit2_doctor_note.txt",
+        "visit4_discharge.txt"
+      ],
+      "page_numbers": [
+        1
+      ],
+      "confidence": 62.0,
+      "recommended_action": "Professional review strongly recommended."
+    },
+    {
+      "title": "Allergy conflict: Penicillin vs Penicillin",
+      "category": "Allergy Conflict",
+      "risk_level": "Critical",
+      "explanation": "A medication ('Penicillin') appears to match the recorded allergy to 'Penicillin'. This must be reviewed by a doctor.",
+      "source_documents": [
+        "visit1_prescription.txt"
+      ],
+      "page_numbers": [
+        1
+      ],
+      "confidence": 74.0,
+      "recommended_action": "Professional review strongly recommended."
+    },
+    {
+      "title": "Related drug-class allergy conflict: Penicillin",
+      "category": "Allergy Conflict",
+      "risk_level": "High",
+      "explanation": "'Penicillin' belongs to a drug class (penicillin) related to the recorded allergy to 'Penicillin'. Cross-reactivity is possible and should be reviewed.",
+      "source_documents": [
+        "visit1_prescription.txt"
+      ],
+      "page_numbers": [
+        1
+      ],
+      "confidence": 68.0,
+      "recommended_action": "Professional review strongly recommended."
+    },
+    {
+      "title": "Related drug-class allergy conflict: Amoxicillin",
+      "category": "Allergy Conflict",
+      "risk_level": "High",
+      "explanation": "'Amoxicillin' belongs to a drug class (penicillin) related to the recorded allergy to 'Penicillin'. Cross-reactivity is possible and should be reviewed.",
+      "source_documents": [
+        "visit1_prescription.txt",
+        "visit2_doctor_note.txt"
+      ],
+      "page_numbers": [
+        1
+      ],
+      "confidence": 68.0,
+      "recommended_action": "Professional review strongly recommended."
+    },
+    {
+      "title": "Missing dosage information: Penicillin",
+      "category": "Missing Information",
+      "risk_level": "Low",
+      "explanation": "No dosage was recorded for 'Penicillin'. The records may be incomplete.",
+      "source_documents": [
+        "visit1_prescription.txt"
+      ],
+      "page_numbers": [
+        1
+      ],
+      "confidence": 50.0,
+      "recommended_action": "Available records may be incomplete. Confirm with a clinician."
+    },
+    {
+      "title": "Missing frequency information: Penicillin",
+      "category": "Missing Information",
+      "risk_level": "Low",
+      "explanation": "No frequency was recorded for 'Penicillin'. The records may be incomplete.",
+      "source_documents": [
+        "visit1_prescription.txt"
+      ],
+      "page_numbers": [
+        1
+      ],
+      "confidence": 48.0,
+      "recommended_action": "Available records may be incomplete. Confirm with a clinician."
+    },
+    {
+      "title": "Missing frequency information: Lisinopril",
+      "category": "Missing Information",
+      "risk_level": "Low",
+      "explanation": "No frequency was recorded for 'Lisinopril'. The records may be incomplete.",
+      "source_documents": [
+        "visit2_doctor_note.txt"
+      ],
+      "page_numbers": [
+        1
+      ],
+      "confidence": 48.0,
+      "recommended_action": "Available records may be incomplete. Confirm with a clinician."
+    },
+    {
+      "title": "Missing frequency information: Aspirin",
+      "category": "Missing Information",
+      "risk_level": "Low",
+      "explanation": "No frequency was recorded for 'Aspirin'. The records may be incomplete.",
+      "source_documents": [
+        "visit2_doctor_note.txt"
+      ],
+      "page_numbers": [
+        1
+      ],
+      "confidence": 48.0,
+      "recommended_action": "Available records may be incomplete. Confirm with a clinician."
+    }
+  ],
+  "lab_trends": [
+    {
+      "test_name": "Blood Glucose",
+      "normalised_test_name": "Blood Glucose",
+      "points": [
+        "date='2024-04-05' value=152.0 text_value=None unit='mg/dL' reference_min=None reference_max=None status='High' source_document='visit2_doctor_note.txt' confidence=95.0",
+        "date='2024-05-20' value=168.0 text_value=None unit='mg/dL' reference_min=None reference_max=None status='High' source_document='visit3_lab_report.txt' confidence=95.0",
+        "date='2024-06-15' value=175.0 text_value=None unit='mg/dL' reference_min=None reference_max=None status='High' source_document='visit4_discharge.txt' confidence=95.0"
+      ],
+      "trend": "Increasing trend",
+      "trend_direction": "increasing",
+      "status": "High",
+      "current_value": 175.0,
+      "unit": "mg/dL",
+      "explanation": "Blood Glucose showed a increasing trend across 3 recorded values (from 152.0 to 175.0 mg/dL). This is not a diagnosis. Please discuss the result with a qualified clinician.",
+      "statuses": [
+        "High",
+        "High",
+        "High"
+      ]
+    },
+    {
+      "test_name": "HbA1c",
+      "normalised_test_name": "HbA1c",
+      "points": [
+        "date='2024-04-05' value=7.4 text_value=None unit='%' reference_min=None reference_max=None status='Normal' source_document='visit2_doctor_note.txt' confidence=95.0",
+        "date='2024-05-20' value=7.8 text_value=None unit='%' reference_min=None reference_max=None status='Normal' source_document='visit3_lab_report.txt' confidence=95.0"
+      ],
+      "trend": "Increasing trend",
+      "trend_direction": "increasing",
+      "status": "Normal",
+      "current_value": 7.8,
+      "unit": "%",
+      "explanation": "HbA1c showed a increasing trend across 2 recorded values (from 7.4 to 7.8 %). This is not a diagnosis. Please discuss the result with a qualified clinician.",
+      "statuses": [
+        "Normal",
+        "Normal"
+      ]
+    },
+    {
+      "test_name": "Creatinine",
+      "normalised_test_name": "Creatinine",
+      "points": [
+        "date='2024-05-20' value=1.1 text_value=None unit='mg/dL' reference_min=None reference_max=None status='Normal' source_document='visit3_lab_report.txt' confidence=95.0",
+        "date='2024-06-15' value=1.2 text_value=None unit='mg/dL' reference_min=None reference_max=None status='Normal' source_document='visit4_discharge.txt' confidence=95.0"
+      ],
+      "trend": "Increasing trend",
+      "trend_direction": "increasing",
+      "status": "Normal",
+      "current_value": 1.2,
+      "unit": "mg/dL",
+      "explanation": "Creatinine showed a increasing trend across 2 recorded values (from 1.1 to 1.2 mg/dL). This is not a diagnosis. Please discuss the result with a qualified clinician.",
+      "statuses": [
+        "Normal",
+        "Normal"
+      ]
+    },
+    {
+      "test_name": "Total Cholesterol",
+      "normalised_test_name": "Total Cholesterol",
+      "points": [
+        "date='2024-05-20' value=210.0 text_value=None unit='mg/dL' reference_min=None reference_max=None status='Normal' source_document='visit3_lab_report.txt' confidence=95.0"
+      ],
+      "trend": "Insufficient data",
+      "trend_direction": "insufficient data",
+      "status": "Normal",
+      "current_value": 210.0,
+      "unit": "mg/dL",
+      "explanation": "Insufficient data to determine a trend for Total Cholesterol. Additional laboratory results are needed.",
+      "statuses": [
+        "Normal"
+      ]
+    },
+    {
+      "test_name": "Haemoglobin",
+      "normalised_test_name": "Haemoglobin",
+      "points": [
+        "date='2024-05-20' value=12.5 text_value=None unit='g/dL' reference_min=None reference_max=None status='Normal' source_document='visit3_lab_report.txt' confidence=95.0"
+      ],
+      "trend": "Insufficient data",
+      "trend_direction": "insufficient data",
+      "status": "Normal",
+      "current_value": 12.5,
+      "unit": "g/dL",
+      "explanation": "Insufficient data to determine a trend for Haemoglobin. Additional laboratory results are needed.",
+      "statuses": [
+        "Normal"
+      ]
+    },
+    {
+      "test_name": "White Blood Cell Count",
+      "normalised_test_name": "White Blood Cell Count",
+      "points": [
+        "date='2024-05-20' value=9.2 text_value=None unit='x10^9/L' reference_min=None reference_max=None status='Normal' source_document='visit3_lab_report.txt' confidence=95.0"
+      ],
+      "trend": "Insufficient data",
+      "trend_direction": "insufficient data",
+      "status": "Normal",
+      "current_value": 9.2,
+      "unit": "x10^9/L",
+      "explanation": "Insufficient data to determine a trend for White Blood Cell Count. Additional laboratory results are needed.",
+      "statuses": [
+        "Normal"
+      ]
+    }
+  ],
+  "evaluation_scenarios": [
+    {
+      "scenario": "Drug Interaction",
+      "expected": "Detection of harmful drug-drug interactions (e.g. Warfarin + Ciprofloxacin / Aspirin).",
+      "actual": "Identified 2 drug interaction alert(s): Potential drug interaction: Aspirin + Warfarin, Potential drug interaction: Warfarin + Aspirin",
+      "source_doc": "visit1_prescription.txt",
+      "page_number": 1,
+      "confidence": 70.0,
+      "risk_level": "High",
+      "status": "PASS",
+      "notes": "Deterministic rules cross-check active medications with severity ratings."
+    },
+    {
+      "scenario": "Duplicate Prescription",
+      "expected": "Detection of identical or brand/generic duplicate prescriptions across encounters.",
+      "actual": "Identified 1 duplicate alert(s): Duplicate medication detected",
+      "source_doc": "visit1_prescription.txt",
+      "page_number": 1,
+      "confidence": 78.0,
+      "risk_level": "Medium",
+      "status": "PASS",
+      "notes": "Brand-to-generic normalisation catches duplicated therapy across providers."
+    },
+    {
+      "scenario": "Dosage Conflict",
+      "expected": "Detection of conflicting strengths or frequencies for the same medication.",
+      "actual": "Identified 2 dosage conflict alert(s).",
+      "source_doc": "visit1_prescription.txt",
+      "page_number": 1,
+      "confidence": 66.0,
+      "risk_level": "High",
+      "status": "PASS",
+      "notes": "Engine flags variation in dosage/frequency across encounters."
+    },
+    {
+      "scenario": "Allergy Contradiction",
+      "expected": "Detection of prescribed medication conflicting with documented allergy history (e.g. Penicillin vs Amoxicillin).",
+      "actual": "Identified 3 allergy conflict alert(s): Allergy conflict: Penicillin vs Penicillin, Related drug-class allergy conflict: Penicillin, Related drug-class allergy conflict: Amoxicillin",
+      "source_doc": "visit1_prescription.txt",
+      "page_number": 1,
+      "confidence": 74.0,
+      "risk_level": "Critical",
+      "status": "PASS",
+      "notes": "Flags beta-lactam and direct substance allergy conflicts with high risk severity."
+    },
+    {
+      "scenario": "Laboratory Trend",
+      "expected": "Longitudinal tracking of blood biomarkers with trajectory categorization.",
+      "actual": "Tracked 6 biomarker series: Blood Glucose (Increasing trend), HbA1c (Increasing trend), Creatinine (Increasing trend), Total Cholesterol (Insufficient data), Haemoglobin (Insufficient data), White Blood Cell Count (Insufficient data)",
+      "source_doc": "Laboratory reports",
+      "page_number": 1,
+      "confidence": 88.0,
+      "risk_level": "Medium",
+      "status": "PASS",
+      "notes": "Normalises alias names (e.g., FBS -> Fasting Blood Sugar) and calculates delta trends."
+    },
+    {
+      "scenario": "Cross-Document Reasoning",
+      "expected": "Accurate synthesis answering cross-visit questions with source citations.",
+      "actual": "Evaluated 4 benchmark questions with evidence grounding.",
+      "source_doc": "Multi-document corpus",
+      "page_number": 1,
+      "confidence": 75.0,
+      "risk_level": "Low",
+      "status": "PASS",
+      "notes": "Hybrid retrieval links evidence from prescriptions, doctor notes, and lab reports."
+    },
+    {
+      "scenario": "Confidence Display",
+      "expected": "Multi-factor transparency score (0-100%) distinct from risk severity.",
+      "actual": "All extracted entities and safety alerts carry explicit confidence scores.",
+      "source_doc": "System-wide",
+      "page_number": 1,
+      "confidence": 85.0,
+      "risk_level": "Low",
+      "status": "PASS",
+      "notes": "Weighted by OCR quality, extraction density, date clarity, and evidence grounding."
+    },
+    {
+      "scenario": "Safety Recommendation",
+      "expected": "Conservative clinical guidance and mandatory medical review notices.",
+      "actual": "All high-risk and low-confidence outputs include 'Professional review strongly recommended.'",
+      "source_doc": "Safety engine",
+      "page_number": 1,
+      "confidence": 95.0,
+      "risk_level": "High",
+      "status": "PASS",
+      "notes": "Adheres to non-diagnostic safety disclaimers across UI and backend."
+    }
+  ],
+  "benchmark_chat_answers": [
+    {
+      "question": "Did two doctors prescribe the same medicine?",
+      "answer": {
+        "answer": "Yes, the following medicines appear in more than one record: Amoxicillin, Aspirin, Lisinopril, Metformin, Penicillin, Warfarin.",
+        "reasoning_summary": "Duplicate prescription detection compared medicine names across the uploaded documents.",
+        "relevant_dates": [],
+        "medications": [
+          "Amoxicillin",
+          "Aspirin",
+          "Lisinopril",
+          "Metformin",
+          "Penicillin",
+          "Warfarin"
+        ],
+        "tests": [],
+        "evidence": [
+          {
+            "snippet": "[STRUCTURED CLINICAL PROFILE]\n\nActive/Recorded Medications:\n- Metformin (500 mg twice daily) [Status: active, Page: 1]\n- Lisinopril (10 mg once daily) [Status: active, Page: 1]\n- Aspirin (81 mg once d",
+            "document": "uploaded record"
+          }
+        ],
+        "confidence": 75.0,
+        "risk_level": "Medium",
+        "recommendation": "Professional review strongly recommended.",
+        "disclaimer": "This application provides AI-assisted document review and does not provide medical diagnosis, treatment, or professional medical advice. AI-generated findings may be incomplete or incorrect. Consult a qualified doctor or pharmacist before making any healthcare decision.",
+        "missing_information": []
+      }
+    },
+    {
+      "question": "Is there any medicine prescribed that conflicts with the patient's known allergies?",
+      "answer": {
+        "answer": "The uploaded records do not contain enough reliable information to answer this question.",
+        "reasoning_summary": "No clear supporting evidence was found in the uploaded records for this question.",
+        "relevant_dates": [],
+        "medications": [],
+        "tests": [],
+        "evidence": [
+          {
+            "snippet": "[STRUCTURED CLINICAL PROFILE]\n\nActive/Recorded Medications:\n- Metformin (500 mg twice daily) [Status: active, Page: 1]\n- Lisinopril (10 mg once daily) [Status: active, Page: 1]\n- Aspirin (81 mg once d",
+            "document": "uploaded record"
+          },
+          {
+            "snippet": "[Document: visit1_prescription.txt | Page: 1 | Type: Prescription | Date: 2024-03-10]\nPRESCRIPTION Patient: Demo Patient Date: 2024-03-10 1. Metformin 500 mg twice daily (BID) - active 2. Lisinopril 1",
+            "document": "uploaded record"
+          }
+        ],
+        "confidence": 44.0,
+        "risk_level": "Low",
+        "recommendation": "Upload additional documents if available.",
+        "disclaimer": "This application provides AI-assisted document review and does not provide medical diagnosis, treatment, or professional medical advice. AI-generated findings may be incomplete or incorrect. Consult a qualified doctor or pharmacist before making any healthcare decision.",
+        "missing_information": []
+      }
+    },
+    {
+      "question": "How has the patient's blood glucose or blood sugar trended over time?",
+      "answer": {
+        "answer": "Blood glucose values found in the records: 175.0, 168.0, 152.0, 168, 175, 152 mg/dL. The most recent value is 152.0.",
+        "reasoning_summary": "The records show a stable blood glucose pattern over the uploaded visits.",
+        "relevant_dates": [],
+        "medications": [],
+        "tests": [
+          "Blood Glucose"
+        ],
+        "evidence": [
+          {
+            "snippet": "[STRUCTURED CLINICAL PROFILE]\n\nActive/Recorded Medications:\n- Metformin (500 mg twice daily) [Status: active, Page: 1]\n- Lisinopril (10 mg once daily) [Status: active, Page: 1]\n- Aspirin (81 mg once d",
+            "document": "uploaded record"
+          },
+          {
+            "snippet": "[Document: visit3_lab_report.txt | Page: 1 | Type: Laboratory report | Date: 2024-05-20]\nLABORATORY REPORT Date: 2024-05-20 Blood glucose 168 mg/dL (High) HbA1c 7.8% Creatinine 1.1 mg/dL Total Cholest",
+            "document": "uploaded record"
+          },
+          {
+            "snippet": "[Document: visit4_discharge.txt | Page: 1 | Type: Laboratory report | Date: 2024-06-15]\nDISCHARGE SUMMARY Date: 2024-06-15 Admitted for unstable blood pressure. Discharge medications: Metformin 500 mg",
+            "document": "uploaded record"
+          }
+        ],
+        "confidence": 77.0,
+        "risk_level": "Medium",
+        "recommendation": "Please discuss the result with a qualified clinician.",
+        "disclaimer": "This application provides AI-assisted document review and does not provide medical diagnosis, treatment, or professional medical advice. AI-generated findings may be incomplete or incorrect. Consult a qualified doctor or pharmacist before making any healthcare decision.",
+        "missing_information": []
+      }
+    },
+    {
+      "question": "Are there any drug-drug interactions detected?",
+      "answer": {
+        "answer": "The uploaded records do not contain enough reliable information to answer this question.",
+        "reasoning_summary": "No clear supporting evidence was found in the uploaded records for this question.",
+        "relevant_dates": [],
+        "medications": [],
+        "tests": [],
+        "evidence": [
+          {
+            "snippet": "[STRUCTURED CLINICAL PROFILE]\n\nActive/Recorded Medications:\n- Metformin (500 mg twice daily) [Status: active, Page: 1]\n- Lisinopril (10 mg once daily) [Status: active, Page: 1]\n- Aspirin (81 mg once d",
+            "document": "uploaded record"
+          }
+        ],
+        "confidence": 44.0,
+        "risk_level": "Low",
+        "recommendation": "Upload additional documents if available.",
+        "disclaimer": "This application provides AI-assisted document review and does not provide medical diagnosis, treatment, or professional medical advice. AI-generated findings may be incomplete or incorrect. Consult a qualified doctor or pharmacist before making any healthcare decision.",
+        "missing_information": []
+      }
+    }
+  ]
+}

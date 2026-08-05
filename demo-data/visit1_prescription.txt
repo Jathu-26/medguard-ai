@@ -1,0 +1,10 @@
+PRESCRIPTION
+Patient: Demo Patient
+Date: 2024-03-10
+
+1. Metformin 500 mg twice daily (BID) - active
+2. Lisinopril 10 mg once daily - active
+3. Aspirin 81 mg once daily - active
+
+Allergy to Penicillin (rash) noted. Follow-up in 2 weeks.
+Diagnosis: Type 2 diabetes, Hypertension.

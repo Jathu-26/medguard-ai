@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+uploads/
+medguard.db
+.pytest_cache/
+.env
+tests/
+

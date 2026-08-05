@@ -1,0 +1,9 @@
+LABORATORY REPORT
+Date: 2024-05-20
+
+Blood glucose 168 mg/dL (High)
+HbA1c 7.8%
+Creatinine 1.1 mg/dL
+Total Cholesterol 210 mg/dL (High)
+Haemoglobin 12.5 g/dL
+WBC 9.2 x10^9/L

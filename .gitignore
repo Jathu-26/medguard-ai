@@ -1,0 +1,43 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Python
+.venv/
+venv/
+ENV/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+*.log
+*.sqlite
+*.sqlite3
+*.db
+medguard.db
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+build/
+dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Uploads & Temp Data
+uploads/
+backend/uploads/
+backend/medguard.db
+backend/*.log
+
+# IDE & OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+.antigravity/
+

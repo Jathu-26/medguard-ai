@@ -1,0 +1,18 @@
+services:
+  # Single Unified Web Service (Next.js + FastAPI under 1 URL)
+  - type: web
+    name: medguard-ai
+    runtime: docker
+    region: frankfurt
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: DATABASE_URL
+        value: sqlite:///./medguard.db
+      - key: CORS_ORIGINS
+        value: "*"
+      - key: OPENAI_API_KEY
+        sync: false
