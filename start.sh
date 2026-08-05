@@ -23,8 +23,7 @@ done
 # 2. Start Next.js frontend in foreground on public $PORT
 echo "Starting Next.js frontend on 0.0.0.0:$PORT..."
 cd /app/frontend
-export PORT=$PORT
-export HOSTNAME="0.0.0.0"
 export INTERNAL_API_URL="http://127.0.0.1:8000"
 
-exec npm start
+exec node --max-old-space-size=4096 ./node_modules/next/dist/bin/next start -H 0.0.0.0 -p "$PORT"
+
