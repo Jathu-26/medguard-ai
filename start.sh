@@ -3,16 +3,20 @@ set -e
 
 PORT=${PORT:-10000}
 echo "=========================================================="
-echo "Starting MedGuard AI Single-Link Unified Stack on Port $PORT"
+echo "Starting MedGuard AI Unified Stack on Port $PORT"
 echo "=========================================================="
 
-# 1. Start FastAPI backend in background on internal port 8000
-echo "Starting internal FastAPI backend on 0.0.0.0:8000..."
-cd /app/backend
-export PYTHONUNBUFFERED=1
-export PYTHONPATH="/app/backend:$PYTHONPATH"
-python3 -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --log-level info &
-BACKEND_PID=$!
+start_backend() {
+  echo "Starting FastAPI backend on 0.0.0.0:8000..."
+  cd /app/backend
+  export PYTHONUNBUFFERED=1
+  export PYTHONPATH="/app/backend:$PYTHONPATH"
+  python3 -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --log-level info &
+  BACKEND_PID=$!
+  echo "FastAPI PID: $BACKEND_PID"
+}
+
+start_backend
 
 # Wait for backend to be ready
 echo "Waiting for FastAPI backend to initialize..."
@@ -27,8 +31,7 @@ for i in $(seq 1 30); do
 done
 
 if [ $HEALTHY -eq 0 ]; then
-  echo "Warning: FastAPI backend health check timed out. Checking process..."
-  kill -0 $BACKEND_PID 2>/dev/null && echo "FastAPI process is active (PID $BACKEND_PID)." || echo "FastAPI process died."
+  echo "Warning: FastAPI backend health check timed out on startup."
 fi
 
 # 2. Start Next.js frontend on public $PORT
@@ -39,7 +42,6 @@ export INTERNAL_API_URL="http://127.0.0.1:8000"
 node --max-old-space-size=4096 ./node_modules/next/dist/bin/next start -H 0.0.0.0 -p "$PORT" &
 FRONTEND_PID=$!
 
-# Trap signals and forward to children
 cleanup() {
   echo "Stopping MedGuard stack..."
   kill -TERM "$BACKEND_PID" "$FRONTEND_PID" 2>/dev/null || true
@@ -49,5 +51,17 @@ cleanup() {
 
 trap cleanup INT TERM
 
-# Wait for both processes to keep container alive
-wait "$FRONTEND_PID"
+# Watchdog loop: keep both processes alive and restart backend if it exits
+while true; do
+  if ! kill -0 "$FRONTEND_PID" 2>/dev/null; then
+    echo "Frontend process exited. Terminating stack."
+    exit 1
+  fi
+
+  if ! kill -0 "$BACKEND_PID" 2>/dev/null; then
+    echo "FastAPI backend process died. Auto-restarting FastAPI..."
+    start_backend
+  fi
+
+  sleep 5
+done
