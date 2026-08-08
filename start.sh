@@ -20,10 +20,24 @@ for i in $(seq 1 30); do
   sleep 1
 done
 
-# 2. Start Next.js frontend in foreground on public $PORT
+# 2. Start Next.js frontend in background on public $PORT
 echo "Starting Next.js frontend on 0.0.0.0:$PORT..."
 cd /app/frontend
 export INTERNAL_API_URL="http://127.0.0.1:8000"
 
-exec node --max-old-space-size=4096 ./node_modules/next/dist/bin/next start -H 0.0.0.0 -p "$PORT"
+node --max-old-space-size=4096 ./node_modules/next/dist/bin/next start -H 0.0.0.0 -p "$PORT" &
+FRONTEND_PID=$!
+
+# Trap signals and forward to children
+cleanup() {
+  echo "Stopping MedGuard stack..."
+  kill -TERM "$BACKEND_PID" "$FRONTEND_PID" 2>/dev/null || true
+  wait "$BACKEND_PID" "$FRONTEND_PID" 2>/dev/null || true
+  exit 0
+}
+
+trap cleanup INT TERM
+
+# Wait for both processes to keep container alive
+wait "$FRONTEND_PID" "$BACKEND_PID"
 
