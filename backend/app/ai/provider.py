@@ -243,6 +243,32 @@ class MockProvider(AIProvider):
                     "disclaimer": "This is not a medical diagnosis. Consult a doctor.",
                 }
 
+        if "water" in lower or "drink" in lower or "hydrat" in lower:
+            return {
+                "answer": "Drinking adequate water and staying hydrated is generally recommended for overall health. However, patients with certain conditions (such as congestive heart failure or end-stage kidney disease) may have fluid restrictions prescribed by their physician.",
+                "reasoning_summary": "Evaluated general clinical hydration guidelines against the patient's medical records.",
+                "evidence": evidence[:2] if evidence else [],
+                "confidence": 85.0,
+                "risk_level": "Low",
+                "recommendation": "Maintain normal hydration unless your doctor has placed you on a strict fluid restriction.",
+                "disclaimer": "This is general clinical information and does not replace specific medical advice.",
+            }
+
+        if "what medicine" in lower or "what drug" in lower or "list of medication" in lower or "medications" in lower:
+            meds = re.findall(self._MED_PATTERN, joined)
+            unique_meds = sorted(set(meds))
+            if unique_meds:
+                return {
+                    "answer": f"The patient's records mention the following medications: {', '.join(unique_meds)}.",
+                    "reasoning_summary": "Extracted all recorded medications from the patient's uploaded clinical records.",
+                    "medications": unique_meds,
+                    "evidence": evidence,
+                    "confidence": 80.0,
+                    "risk_level": "Low",
+                    "recommendation": "Review with your pharmacist or physician before making any adjustments.",
+                    "disclaimer": "This is an AI summary of recorded documents.",
+                }
+
         for required in ["allergy", "discontinued"]:
             if required in lower and required not in joined.lower():
                 return {

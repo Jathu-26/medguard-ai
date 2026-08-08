@@ -3,7 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 
 async function proxyRequest(req: NextRequest, { params }: { params: { path: string[] } }) {
-  const targetPath = (await params).path.join("/");
+  const resolvedParams = await params;
+  const targetPath = (resolvedParams.path || []).join("/");
   const searchParams = req.nextUrl.searchParams.toString();
   const queryString = searchParams ? `?${searchParams}` : "";
 
@@ -14,8 +15,20 @@ async function proxyRequest(req: NextRequest, { params }: { params: { path: stri
     "http://0.0.0.0:8000",
   ];
 
-  const headers = new Headers(req.headers);
-  headers.delete("host");
+  // Pass only relevant, safe client headers to avoid fetch/proxy conflicts
+  const headers = new Headers();
+  const contentType = req.headers.get("content-type");
+  if (contentType) {
+    headers.set("content-type", contentType);
+  }
+  const auth = req.headers.get("authorization");
+  if (auth) {
+    headers.set("authorization", auth);
+  }
+  const accept = req.headers.get("accept");
+  if (accept) {
+    headers.set("accept", accept);
+  }
 
   let body: BodyInit | undefined = undefined;
   if (req.method !== "GET" && req.method !== "HEAD") {
@@ -35,8 +48,16 @@ async function proxyRequest(req: NextRequest, { params }: { params: { path: stri
         redirect: "manual",
       });
 
-      const responseHeaders = new Headers(response.headers);
-      return new NextResponse(response.body, {
+      const responseHeaders = new Headers();
+      response.headers.forEach((val, key) => {
+        // Do not forward hop-by-hop headers
+        if (!["transfer-encoding", "content-encoding", "connection"].includes(key.toLowerCase())) {
+          responseHeaders.set(key, val);
+        }
+      });
+
+      const responseBuffer = await response.arrayBuffer();
+      return new NextResponse(responseBuffer, {
         status: response.status,
         statusText: response.statusText,
         headers: responseHeaders,
