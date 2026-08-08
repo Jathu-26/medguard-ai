@@ -66,30 +66,42 @@ const PAGE_TITLES: Record<string, { title: string; subtitle: string }> = {
 
 export function Header({ onOpenMobile }: { onOpenMobile: () => void }) {
   const pathname = usePathname();
-  const { patients, activePatient, selectPatientById } = usePatient();
+  const { patients, activePatient, selectPatientById, refreshPatients } = usePatient();
   const [isPatientDropdownOpen, setIsPatientDropdownOpen] = useState(false);
   const [apiOnline, setApiOnline] = useState<boolean | null>(null);
+  const [isChecking, setIsChecking] = useState(false);
+
+  const checkHealth = useCallback(async () => {
+    setIsChecking(true);
+    try {
+      await apiClient.getHealth();
+      setApiOnline(true);
+    } catch {
+      setApiOnline(false);
+    } finally {
+      setIsChecking(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    checkHealth();
+    const interval = setInterval(() => {
+      checkHealth();
+    }, apiOnline === false ? 4000 : 15000);
+    return () => clearInterval(interval);
+  }, [checkHealth, apiOnline]);
+
+  useEffect(() => {
+    if (apiOnline === true && patients.length === 0) {
+      refreshPatients();
+    }
+  }, [apiOnline, patients.length, refreshPatients]);
 
   const matched =
     PAGE_TITLES[pathname] || {
       title: "MedGuard AI",
       subtitle: "Medical Document Cross-Checking Platform",
     };
-
-  useEffect(() => {
-    let isMounted = true;
-    apiClient
-      .getHealth()
-      .then(() => {
-        if (isMounted) setApiOnline(true);
-      })
-      .catch(() => {
-        if (isMounted) setApiOnline(false);
-      });
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   return (
     <header className="sticky top-0 z-30 flex items-center justify-between px-4 md:px-8 py-3.5 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800/80 transition-colors">
@@ -117,24 +129,29 @@ export function Header({ onOpenMobile }: { onOpenMobile: () => void }) {
       {/* Right: Active Patient Dropdown & Quick Actions */}
       <div className="flex items-center gap-2.5 md:gap-4">
         {/* Backend API Health Status */}
-        <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[11px] font-medium text-slate-600 dark:text-slate-300">
-          {apiOnline === true ? (
-            <>
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-              <span>Backend Connected</span>
-            </>
-          ) : apiOnline === false ? (
-            <>
-              <AlertCircle className="w-3.5 h-3.5 text-rose-500" />
-              <span>Backend Offline</span>
-            </>
-          ) : (
+        <button
+          type="button"
+          onClick={() => checkHealth()}
+          title="Click to check backend connectivity status"
+          className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors cursor-pointer border border-slate-200 dark:border-slate-800 text-[11px] font-medium text-slate-600 dark:text-slate-300"
+        >
+          {isChecking ? (
             <>
               <Activity className="w-3.5 h-3.5 text-sky-500 animate-spin" />
               <span>Checking...</span>
             </>
+          ) : apiOnline === true ? (
+            <>
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+              <span>Backend Connected</span>
+            </>
+          ) : (
+            <>
+              <AlertCircle className="w-3.5 h-3.5 text-rose-500 animate-pulse" />
+              <span>Backend Offline (Click to Retry)</span>
+            </>
           )}
-        </div>
+        </button>
 
         {/* Patient Switcher Dropdown */}
         <div className="relative">
