@@ -9,11 +9,23 @@ from app.models.base import Base
 
 settings = get_settings()
 
-if settings.database_url.startswith("postgres"):
-    engine = create_engine(settings.database_url, pool_pre_ping=True)
-else:
+db_url = settings.database_url
+if db_url.startswith("postgres://"):
+    db_url = db_url.replace("postgres://", "postgresql://", 1)
+
+try:
+    if db_url.startswith("postgresql"):
+        engine = create_engine(db_url, pool_pre_ping=True)
+    else:
+        engine = create_engine(
+            db_url,
+            connect_args={"check_same_thread": False},
+        )
+except Exception as exc:
+    import logging
+    logging.getLogger(__name__).warning("Failed to create engine with %s: %s. Falling back to sqlite.", db_url, exc)
     engine = create_engine(
-        settings.database_url,
+        "sqlite:///./medguard.db",
         connect_args={"check_same_thread": False},
     )
 
@@ -46,22 +58,26 @@ def init_db() -> None:
     from sqlalchemy import text
     from app import models  # noqa: F401  (register models)
 
-    Base.metadata.create_all(bind=engine)
+    try:
+        Base.metadata.create_all(bind=engine)
+    except Exception as exc:
+        import logging
+        logging.getLogger(__name__).warning("Base.metadata.create_all: %s", exc)
 
     # Lightweight SQLite migration for newly added columns
-    with engine.begin() as conn:
-        tables_to_check = [
-            ("allergies", "page_number", "INTEGER DEFAULT 1"),
-            ("medications", "page_number", "INTEGER DEFAULT 1"),
-            ("prescriptions", "page_number", "INTEGER DEFAULT 1"),
-            ("lab_results", "page_number", "INTEGER DEFAULT 1"),
-            ("diagnosis_mentions", "page_number", "INTEGER DEFAULT 1"),
-            ("clinical_notes", "page_number", "INTEGER DEFAULT 1"),
-        ]
-        for table, col, col_type in tables_to_check:
-            try:
+    tables_to_check = [
+        ("allergies", "page_number", "INTEGER DEFAULT 1"),
+        ("medications", "page_number", "INTEGER DEFAULT 1"),
+        ("prescriptions", "page_number", "INTEGER DEFAULT 1"),
+        ("lab_results", "page_number", "INTEGER DEFAULT 1"),
+        ("diagnosis_mentions", "page_number", "INTEGER DEFAULT 1"),
+        ("clinical_notes", "page_number", "INTEGER DEFAULT 1"),
+    ]
+    for table, col, col_type in tables_to_check:
+        try:
+            with engine.begin() as conn:
                 conn.execute(text(f"ALTER TABLE {table} ADD COLUMN {col} {col_type}"))
-            except Exception:
-                # Column already exists or table not using SQLite
-                pass
+        except Exception:
+            # Column already exists or table not using SQLite
+            pass
 
