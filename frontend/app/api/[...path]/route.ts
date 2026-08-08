@@ -2,9 +2,25 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
-async function proxyRequest(req: NextRequest, { params }: { params: { path: string[] } }) {
-  const resolvedParams = await params;
-  const targetPath = (resolvedParams.path || []).join("/");
+async function proxyRequest(
+  req: NextRequest,
+  context: { params: { path: string[] } } | { params: Promise<{ path: string[] }> }
+) {
+  let targetPath = "";
+  try {
+    const rawParams = context && "params" in context ? context.params : null;
+    const resolved = rawParams
+      ? typeof (rawParams as any).then === "function"
+        ? await rawParams
+        : rawParams
+      : null;
+    if (resolved && Array.isArray(resolved.path)) {
+      targetPath = resolved.path.join("/");
+    }
+  } catch {
+    targetPath = "";
+  }
+
   const searchParams = req.nextUrl.searchParams.toString();
   const queryString = searchParams ? `?${searchParams}` : "";
 
@@ -15,7 +31,6 @@ async function proxyRequest(req: NextRequest, { params }: { params: { path: stri
     "http://0.0.0.0:8000",
   ];
 
-  // Pass only relevant, safe client headers to avoid fetch/proxy conflicts
   const headers = new Headers();
   const contentType = req.headers.get("content-type");
   if (contentType) {
@@ -32,7 +47,10 @@ async function proxyRequest(req: NextRequest, { params }: { params: { path: stri
 
   let body: BodyInit | undefined = undefined;
   if (req.method !== "GET" && req.method !== "HEAD") {
-    body = await req.arrayBuffer();
+    const raw = await req.arrayBuffer();
+    if (raw && raw.byteLength > 0) {
+      body = raw;
+    }
   }
 
   let lastError: any = null;
@@ -50,7 +68,6 @@ async function proxyRequest(req: NextRequest, { params }: { params: { path: stri
 
       const responseHeaders = new Headers();
       response.headers.forEach((val, key) => {
-        // Do not forward hop-by-hop headers
         if (!["transfer-encoding", "content-encoding", "connection"].includes(key.toLowerCase())) {
           responseHeaders.set(key, val);
         }
@@ -77,22 +94,22 @@ async function proxyRequest(req: NextRequest, { params }: { params: { path: stri
   );
 }
 
-export async function GET(req: NextRequest, context: { params: { path: string[] } }) {
+export async function GET(req: NextRequest, context: any) {
   return proxyRequest(req, context);
 }
 
-export async function POST(req: NextRequest, context: { params: { path: string[] } }) {
+export async function POST(req: NextRequest, context: any) {
   return proxyRequest(req, context);
 }
 
-export async function PUT(req: NextRequest, context: { params: { path: string[] } }) {
+export async function PUT(req: NextRequest, context: any) {
   return proxyRequest(req, context);
 }
 
-export async function DELETE(req: NextRequest, context: { params: { path: string[] } }) {
+export async function DELETE(req: NextRequest, context: any) {
   return proxyRequest(req, context);
 }
 
-export async function PATCH(req: NextRequest, context: { params: { path: string[] } }) {
+export async function PATCH(req: NextRequest, context: any) {
   return proxyRequest(req, context);
 }

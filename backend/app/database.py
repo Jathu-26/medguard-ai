@@ -11,6 +11,8 @@ from app.models.base import Base
 logger = logging.getLogger(__name__)
 settings = get_settings()
 
+sqlite_url = "sqlite:///./medguard.db"
+
 
 def _build_engine():
     db_url = settings.database_url
@@ -31,12 +33,12 @@ def _build_engine():
         except Exception as exc:
             logger.warning("PostgreSQL connection failed (%s). Falling back to SQLite.", exc)
             return create_engine(
-                "sqlite:///./medguard.db",
+                sqlite_url,
                 connect_args={"check_same_thread": False},
             )
 
     return create_engine(
-        db_url or "sqlite:///./medguard.db",
+        db_url or sqlite_url,
         connect_args={"check_same_thread": False},
     )
 
@@ -68,13 +70,19 @@ def get_db():
 
 
 def init_db() -> None:
-    """Create all tables and perform lightweight column migrations if needed."""
-    from app import models  # noqa: F401  (register models)
+    """Create all tables with full SQLite fallback guarantee."""
+    global engine, SessionLocal
+    from app import models  # noqa: F401 (register all models)
 
     try:
         Base.metadata.create_all(bind=engine)
+        logger.info("Database tables initialized successfully.")
     except Exception as exc:
-        logger.warning("Base.metadata.create_all: %s", exc)
+        logger.warning("Base.metadata.create_all failed on primary engine: %s. Re-binding to SQLite...", exc)
+        engine = create_engine(sqlite_url, connect_args={"check_same_thread": False})
+        SessionLocal.configure(bind=engine)
+        Base.metadata.create_all(bind=engine)
+        logger.info("Database tables initialized on SQLite fallback.")
 
     # Lightweight SQLite migration for newly added columns
     tables_to_check = [
