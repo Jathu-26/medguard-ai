@@ -85,12 +85,15 @@ export function PatientProvider({ children }: { children: React.ReactNode }) {
   }, [success, error, setActivePatient]);
 
   useEffect(() => {
+    let isMounted = true;
     refreshPatients().then((list) => {
-      // If no patients exist on initial visit, auto-seed demo data for seamless experience
-      if (list.length === 0) {
+      if (isMounted && list.length === 0) {
         loadDemo();
       }
     });
+    return () => {
+      isMounted = false;
+    };
   }, [refreshPatients, loadDemo]);
 
   return (

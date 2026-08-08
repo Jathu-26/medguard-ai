@@ -87,15 +87,9 @@ export function Header({ onOpenMobile }: { onOpenMobile: () => void }) {
     checkHealth();
     const interval = setInterval(() => {
       checkHealth();
-    }, apiOnline === false ? 4000 : 15000);
+    }, 10000);
     return () => clearInterval(interval);
-  }, [checkHealth, apiOnline]);
-
-  useEffect(() => {
-    if (apiOnline === true && patients.length === 0) {
-      refreshPatients();
-    }
-  }, [apiOnline, patients.length, refreshPatients]);
+  }, [checkHealth]);
 
   const matched =
     PAGE_TITLES[pathname] || {
